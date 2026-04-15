@@ -11,6 +11,10 @@ const zlib = require("zlib");
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
+app.use((req, res, next) => {
+  console.log("🔥 HIT:", req.method, req.url);
+  next();
+});
 
 server.on("upgrade", (request, socket, head) => {
   if (request.url === "/stream") {
