@@ -50,15 +50,19 @@ function muLawToPCM16(muLawBuf) {
 }
 
 // ---------- Twilio webhook ----------
-app.post("/voice", express.urlencoded({ extended: false }), (req, res) => {
-  const wsUrl = `wss://${req.headers.host}`;
+app.use(express.urlencoded({ extended: false }));
+
+app.post("/voice", (req, res) => {
+  const host = req.headers.host;
+
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Connect>
-    <Stream url="${wsUrl}/stream" />
+    <Stream url="wss://${host}/stream" />
   </Connect>
 </Response>`;
-  res.type("text/xml");
+
+  res.set("Content-Type", "text/xml");
   res.send(twiml);
 });
 
