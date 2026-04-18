@@ -321,15 +321,19 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
   isSpeaking = false;
 
   // ⏱️ 3-second fallback timer
-  setTimeout(async () => {
+  setTimeout(() => {
+  try {
     if (!lastUserSpeechTime || Date.now() - lastUserSpeechTime > 3000) {
       console.log("🤖 Emma (fallback): prompting caller");
 
       const fallbackText = "Are you calling about a job, or do you have a question I can help with?";
 
-      await speakResponse(fallbackText);
+      speakResponse(fallbackText);
     }
-  }, 3000);
+  } catch (err) {
+    console.error("Fallback error:", err.message);
+  }
+}, 3000);
 }
 
   // ---------- Handle Twilio media stream events ----------
