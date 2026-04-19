@@ -90,7 +90,6 @@ wss.on("connection", (ws, req) => {
 let isProcessing = false;
 let currentUtterance = "";
 let utteranceTimer = null;
-let lastUserSpeechTime = null;
 
   // ---------- Connect to Deepgram ----------
   function connectDeepgram() {
@@ -140,7 +139,6 @@ let lastUserSpeechTime = null;
           currentUtterance += " " + transcript;
           currentUtterance = currentUtterance.trim();
           console.log(`👤 Caller: ${currentUtterance}`);
-          lastUserSpeechTime = Date.now();
         }
 
         // When Deepgram signals end of utterance, send to Claude
@@ -306,34 +304,15 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
   }
 
   // ---------- Emma's greeting ----------
-  async function sendGreeting() {
+ async function sendGreeting() {
   await new Promise((r) => setTimeout(r, 1000));
-
   const greeting = "Hello, thank you for calling TradesMagic, this is Emma. How can I help you today?";
   console.log(`🤖 Emma (greeting): ${greeting}`);
-
   conversationHistory.push({ role: "assistant", content: greeting });
-
   await speakResponse(greeting);
-
-  // Allow system to start listening
+  // Don't listen until greeting is fully done
   await new Promise((r) => setTimeout(r, 500));
   isSpeaking = false;
-
-  // ⏱️ 3-second fallback timer
-  setTimeout(() => {
-  try {
-    if (!lastUserSpeechTime || Date.now() - lastUserSpeechTime > 3000) {
-      console.log("🤖 Emma (fallback): prompting caller");
-
-      const fallbackText = "Are you calling about a job, or do you have a question I can help with?";
-
-      speakResponse(fallbackText);
-    }
-  } catch (err) {
-    console.error("Fallback error:", err.message);
-  }
-}, 3000);
 }
 
   // ---------- Handle Twilio media stream events ----------
