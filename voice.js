@@ -23,7 +23,7 @@ const EMMA_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
 const MAGGIE_VOICE_ID = "DXFkLCBUTmvXpp2QwZjA";
 
 const app = express();
-const server = http.createServer(app);
+const server = require("http").createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
 app.use((req, res, next) => {
   console.log("🔥 HIT:", req.method, req.url);
@@ -392,6 +392,6 @@ case "start":
 // ---------- Start server ----------
 const PORT = process.env.PORT || 3004;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Emma voice server running on port " + PORT);
 });
