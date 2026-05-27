@@ -78,10 +78,12 @@ fetch("http://localhost:3002/track-call", {
 
   const host = req.headers.host;
 
-  const twiml = `<?xml version="1.0" encoding="UTF-8"?>
+const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Connect>
-<Stream url="wss://${host}/stream" />
+    <Stream url="wss://${host}/stream">
+      <Parameter name="to" value="${req.body.To}" />
+    </Stream>
   </Connect>
 </Response>`;
 
@@ -362,7 +364,21 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
 
 case "start":
   streamSid = data.start?.streamSid || data.streamSid;
+
+  const calledNumber =
+    data.start?.customParameters?.to || "";
+
   console.log(`🚀 Stream started — SID: ${streamSid}`);
+  console.log("📞 Called Number:", calledNumber);
+
+  if (calledNumber === "+18557486538") {
+    assistantName = "Maggie";
+    activePrompt = MAGGIE_PROMPT;
+    activeVoiceId = MAGGIE_VOICE_ID;
+    activeGreeting =
+      "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
+  }
+
   sendGreeting();
   break;
 
