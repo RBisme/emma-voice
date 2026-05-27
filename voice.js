@@ -75,20 +75,6 @@ fetch("http://localhost:3002/track-call", {
   body: JSON.stringify({ to: req.body.To })
 }).catch(() => {});
 
-const users = readJSON(USERS_PATH);
-const user = users.find(u => u.twilioNumber === req.body.To);
-
-await fetch("http://localhost:3002/track-call", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ to: req.body.To })
-});
-
-if (user) {
-  user.callsUsed = (user.callsUsed || 0) + 1;
-  writeJSON(USERS_PATH, users);
-  console.log("Call count:", user.callsUsed);
-}
 
   const host = req.headers.host;
 
