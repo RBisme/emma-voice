@@ -135,7 +135,7 @@ let utteranceTimer = null;
       "interim_results=true&" +
       "utterance_end_ms=1500&" +
       "vad_events=true&" +
-      "endpointing=900";
+      "endpointing=1200";
 
     deepgramWs = new WebSocket(dgUrl, {
       headers: {
