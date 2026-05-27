@@ -31,11 +31,13 @@ app.use((req, res, next) => {
 });
 
 server.on("upgrade", (request, socket, head) => {
-  console.log("🔌 WebSocket upgrade:", request.url);
-
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit("connection", ws, request);
-  });
+  if (request.url === "/stream") {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit("connection", ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
 });
 
 // ---------- Load Emma's personality ----------
@@ -79,9 +81,7 @@ fetch("http://localhost:3002/track-call", {
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Connect>
-    <Stream url="wss://${host}/stream">
-  <Parameter name="to" value="${req.body.To}" />
-</Stream>
+<Stream url="wss://${host}/stream" />
   </Connect>
 </Response>`;
 
@@ -108,16 +108,6 @@ wss.on("connection", (ws, req) => {
 let activePrompt = EMMA_PROMPT;
 let activeVoiceId = EMMA_VOICE_ID;
 let activeGreeting = "Hello, thank you for calling TradesMagic, this is Emma. How can I help you today?";
-const calledNumber = req.headers["x-twilio-to"] || "";
-console.log("📞 Called Number:", calledNumber);
-
-if (calledNumber === "+18557486538") {
-  assistantName = "Maggie";
-  activePrompt = MAGGIE_PROMPT;
-  activeVoiceId = MAGGIE_VOICE_ID;
-  activeGreeting =
-    "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
-}
   let deepgramWs = null;
   let isSpeaking = false;
 let isProcessing = false;
@@ -363,22 +353,9 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
         connectDeepgram();
         break;
 
-     case "start":
+case "start":
   streamSid = data.start?.streamSid || data.streamSid;
   console.log(`🚀 Stream started — SID: ${streamSid}`);
-
-  const calledNumber = data.start?.customParameters?.to || "";
-
-  console.log("📞 Called Number:", calledNumber);
-
-  if (calledNumber === "+18557486538") {
-    assistantName = "Maggie";
-    activePrompt = MAGGIE_PROMPT;
-    activeVoiceId = MAGGIE_VOICE_ID;
-    activeGreeting =
-      "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
-  }
-
   sendGreeting();
   break;
 
