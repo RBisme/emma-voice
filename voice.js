@@ -108,6 +108,13 @@ wss.on("connection", (ws, req) => {
 let activePrompt = EMMA_PROMPT;
 let activeVoiceId = EMMA_VOICE_ID;
 let activeGreeting = "Hello, thank you for calling TradesMagic, this is Emma. How can I help you today?";
+if (req.headers.host.includes("855")) {
+  assistantName = "Maggie";
+  activePrompt = MAGGIE_PROMPT;
+  activeVoiceId = MAGGIE_VOICE_ID;
+  activeGreeting =
+    "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
+}
   let deepgramWs = null;
   let isSpeaking = false;
 let isProcessing = false;
