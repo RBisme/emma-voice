@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 });
 
 server.on("upgrade", (request, socket, head) => {
-  if (request.url === "/stream") {
+  if (request.url.includes("/stream")) {
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit("connection", ws, request);
     });
