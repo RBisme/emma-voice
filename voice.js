@@ -8,6 +8,20 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
+const EMMA_PROMPT = fs.readFileSync(
+  path.join(__dirname, "emma_sales_prompt.txt"),
+  "utf8"
+);
+
+const MAGGIE_PROMPT = fs.readFileSync(
+  path.join(__dirname, "maggie_prompt.txt"),
+  "utf8"
+);
+
+const EMMA_VOICE_ID = process.env.ELEVENLABS_VOICE_ID;
+
+const MAGGIE_VOICE_ID = "DXFkLCBUTmvXpp2QwZjA";
+
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ noServer: true });
@@ -27,10 +41,7 @@ server.on("upgrade", (request, socket, head) => {
 });
 
 // ---------- Load Emma's personality ----------
-const EMMA_PROMPT = fs.readFileSync(
-  path.join(__dirname, "emma_sales_prompt.txt"),
-  "utf8"
-);
+
 
 // ---------- Anthropic client ----------
 const anthropic = new Anthropic({
@@ -56,13 +67,37 @@ function muLawToPCM16(muLawBuf) {
 // ---------- Twilio webhook ----------
 app.use(express.urlencoded({ extended: false }));
 
-app.post("/voice", (req, res) => {
+app.post("/voice", async (req, res) => {
+
+fetch("http://localhost:3002/track-call", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ to: req.body.To })
+}).catch(() => {});
+
+const users = readJSON(USERS_PATH);
+const user = users.find(u => u.twilioNumber === req.body.To);
+
+await fetch("http://localhost:3002/track-call", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ to: req.body.To })
+});
+
+if (user) {
+  user.callsUsed = (user.callsUsed || 0) + 1;
+  writeJSON(USERS_PATH, users);
+  console.log("Call count:", user.callsUsed);
+}
+
   const host = req.headers.host;
 
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Connect>
-    <Stream url="wss://${host}/stream" />
+    <Stream url="wss://${host}/stream">
+  <Parameter name="to" value="${req.body.To}" />
+</Stream>
   </Connect>
 </Response>`;
 
@@ -85,6 +120,20 @@ wss.on("connection", (ws, req) => {
 
   let streamSid = null;
   let conversationHistory = [];
+  let assistantName = "Emma";
+let activePrompt = EMMA_PROMPT;
+let activeVoiceId = EMMA_VOICE_ID;
+let activeGreeting = "Hello, thank you for calling TradesMagic, this is Emma. How can I help you today?";
+const calledNumber = req.headers["x-twilio-to"] || "";
+console.log("📞 Called Number:", calledNumber);
+
+if (calledNumber === "+18557486538") {
+  assistantName = "Maggie";
+  activePrompt = MAGGIE_PROMPT;
+  activeVoiceId = MAGGIE_VOICE_ID;
+  activeGreeting =
+    "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
+}
   let deepgramWs = null;
   let isSpeaking = false;
 let isProcessing = false;
@@ -187,7 +236,7 @@ let utteranceTimer = null;
         model: "claude-sonnet-4-20250514",
         max_tokens: 300,
         temperature: 0,
-system: EMMA_PROMPT + "\n\nIMPORTANT: If you do not receive a response to a question, ask it only once more in a different way. Never repeat the exact same question more than once. When collecting an email address, ask the caller to say it naturally, confirm what you heard by reading it back once, and ask if that is correct. When offering appointment times, simply state the available options and stop — do not follow up with phrases like 'which one works best for you' or any similar redundant question. Just wait for the caller to choose.",
+system: activePrompt + "\n\nIMPORTANT: If you do not receive a response to a question, ask it only once more in a different way. Never repeat the exact same question more than once. When collecting an email address, ask the caller to say it naturally, confirm what you heard by reading it back once, and ask if that is correct. When offering appointment times, simply state the available options and stop — do not follow up with phrases like 'which one works best for you' or any similar redundant question. Just wait for the caller to choose.",
         messages: conversationHistory,
       });
 
@@ -227,7 +276,7 @@ system: EMMA_PROMPT + "\n\nIMPORTANT: If you do not receive a response to a ques
 
     try {
      const response = await fetch(
-  `https://api.elevenlabs.io/v1/text-to-speech/${process.env.ELEVENLABS_VOICE_ID}/stream?output_format=ulaw_8000`,
+  `https://api.elevenlabs.io/v1/text-to-speech/${activeVoiceId}/stream?output_format=ulaw_8000`,
   {
     method: "POST",
    headers: {
@@ -238,7 +287,7 @@ system: EMMA_PROMPT + "\n\nIMPORTANT: If you do not receive a response to a ques
 },
     body: JSON.stringify({
       text: text,
-      model_id: "eleven_turbo_v2_5",
+      model_id: "eleven_multilingual_v2",
       voice_settings: {
         stability: 0.5,
         similarity_boost: 0.75,
@@ -306,7 +355,7 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
   // ---------- Emma's greeting ----------
  async function sendGreeting() {
   await new Promise((r) => setTimeout(r, 1000));
-  const greeting = "Hello, thank you for calling TradesMagic, this is Emma. How can I help you today?";
+  const greeting = activeGreeting;
   console.log(`🤖 Emma (greeting): ${greeting}`);
   conversationHistory.push({ role: "assistant", content: greeting });
   await speakResponse(greeting);
@@ -330,11 +379,24 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
         connectDeepgram();
         break;
 
-      case "start":
-        streamSid = data.start?.streamSid || data.streamSid;
-        console.log(`🚀 Stream started — SID: ${streamSid}`);
-        sendGreeting();
-        break;
+     case "start":
+  streamSid = data.start?.streamSid || data.streamSid;
+  console.log(`🚀 Stream started — SID: ${streamSid}`);
+
+  const calledNumber = data.start?.customParameters?.to || "";
+
+  console.log("📞 Called Number:", calledNumber);
+
+  if (calledNumber === "+18557486538") {
+    assistantName = "Maggie";
+    activePrompt = MAGGIE_PROMPT;
+    activeVoiceId = MAGGIE_VOICE_ID;
+    activeGreeting =
+      "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
+  }
+
+  sendGreeting();
+  break;
 
     case "media":
   // Only forward audio to Deepgram when Emma is NOT speaking
@@ -367,8 +429,8 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
 });
 
 // ---------- Start server ----------
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3004;
 
-server.listen(PORT, "0.0.0.0", () => {
-  console.log("✅ Emma voice server running on port " + PORT);
+app.listen(PORT, () => {
+  console.log("Emma voice server running on port " + PORT);
 });
