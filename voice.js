@@ -281,7 +281,7 @@ system: activePrompt + "\n\nIMPORTANT: If you do not receive a response to a que
         similarity_boost: 0.75,
         style: 0.0,
         use_speaker_boost: true,
-        speed: 0.10,
+        speed: 1.0,
       },
       output_format: "ulaw_8000",  // ✅ Stays here, unchanged
     }),
