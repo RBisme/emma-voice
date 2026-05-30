@@ -183,7 +183,7 @@ let utteranceTimer = null;
     const utteranceToProcess = currentUtterance.trim();
     currentUtterance = "";
     await getEmmaResponse(utteranceToProcess);
-  }, 300);
+  }, 500);
 }
       }
 
