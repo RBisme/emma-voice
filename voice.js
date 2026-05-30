@@ -174,12 +174,17 @@ let utteranceTimer = null;
         }
 
         // When Deepgram signals end of utterance, send to Claude
-        if (speechFinal && currentUtterance.trim() !== "") {
-          const utteranceToProcess = currentUtterance.trim();
-          currentUtterance = "";
-          clearTimeout(utteranceTimer);
-          await getEmmaResponse(utteranceToProcess);
-        }
+    if (speechFinal && currentUtterance.trim() !== "") {
+  clearTimeout(utteranceTimer);
+
+  utteranceTimer = setTimeout(async () => {
+    if (currentUtterance.trim() === "") return;
+
+    const utteranceToProcess = currentUtterance.trim();
+    currentUtterance = "";
+    await getEmmaResponse(utteranceToProcess);
+  }, 700);
+}
       }
 
       // Fallback: UtteranceEnd event
