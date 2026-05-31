@@ -212,6 +212,8 @@ let utteranceTimer = null;
 
     console.log(`🧠 Sending to Claude: "${userText}"`);
 
+const claudeStart = Date.now();
+
     // Add user message to history
     conversationHistory.push({
       role: "user",
@@ -230,6 +232,8 @@ system: activePrompt + "\n\nIMPORTANT: If you do not receive a response to a que
 
       const emmaReply =
         response.content[0]?.text || "I'm sorry, could you repeat that?";
+
+console.log(`⏱️ Claude response time: ${Date.now() - claudeStart}ms`);
 
       console.log(`🤖 Emma: ${emmaReply}`);
 
@@ -263,6 +267,9 @@ system: activePrompt + "\n\nIMPORTANT: If you do not receive a response to a que
     isSpeaking = true;
 
     try {
+
+const ttsStart = Date.now();
+
      const response = await fetch(
   `https://api.elevenlabs.io/v1/text-to-speech/${activeVoiceId}/stream?output_format=ulaw_8000`,
   {
@@ -294,6 +301,9 @@ system: activePrompt + "\n\nIMPORTANT: If you do not receive a response to a que
   isSpeaking = false;
   return;
 }
+
+
+console.log(`⏱️ ElevenLabs startup time: ${Date.now() - ttsStart}ms`);
 
 console.log("✅ ElevenLabs response headers:", JSON.stringify(Object.fromEntries(response.headers)));
 
