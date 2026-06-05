@@ -384,7 +384,11 @@ case "start":
     data.start?.customParameters?.to || "";
 
 const callerNumber =
-  data.start?.customParameters?.from || "";
+  data.start?.from ||
+  data.start?.caller ||
+  data.start?.callerNumber ||
+  data.start?.customParameters?.from ||
+  "";
 
 const callSid =
   data.start?.callSid || "";
