@@ -383,8 +383,16 @@ case "start":
   const calledNumber =
     data.start?.customParameters?.to || "";
 
+const callerNumber =
+  data.start?.customParameters?.from || "";
+
+const callSid =
+  data.start?.callSid || "";
+
   console.log(`🚀 Stream started — SID: ${streamSid}`);
-  console.log("📞 Called Number:", calledNumber);
+  console.log("📞 Caller Number:", callerNumber);
+console.log("📞 Called Number:", calledNumber);
+console.log("🆔 Call SID:", callSid);
 
   if (calledNumber === "+18557486538") {
     assistantName = "Maggie";
