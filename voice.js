@@ -223,7 +223,7 @@ const claudeStart = Date.now();
     try {
       // Call Claude with Emma's full prompt and conversation history
       const response = await anthropic.messages.create({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-5",
         max_tokens: 120,
         temperature: 0,
 system: activePrompt + "\n\nIMPORTANT: If you do not receive a response to a question, ask it only once more in a different way. Never repeat the exact same question more than once. When collecting an email address, ask the caller to say it naturally, confirm what you heard by reading it back once, and ask if that is correct. When offering appointment times, simply state the available options and stop — do not follow up with phrases like 'which one works best for you' or any similar redundant question. Just wait for the caller to choose.",
