@@ -18,6 +18,10 @@
  * ============================================================
  */
 
+const {
+    VoiceRuntimeDispatcher
+} = require("./voice-runtime-dispatcher");
+
 class VoiceRuntime {
 
    constructor({
@@ -72,7 +76,16 @@ this.resolver =
 this.bridge =
     bridge;
 
+this.dispatcher =
+    new VoiceRuntimeDispatcher();
+
     }
+
+async processEvent(event) {
+
+    return await this.dispatcher.execute(event);
+
+}
 
     async start() {
 

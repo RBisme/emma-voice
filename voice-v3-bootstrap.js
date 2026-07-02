@@ -63,7 +63,7 @@ function createVoiceV3(runtime, openAIClient, triggerMap = {}) {
 
     const resolver = new VoiceTriggerResolver(triggerMap);
 
-    const bridge = new VoiceRuntimeBridge(runtime);
+    const bridge = new VoiceRuntimeBridge();
 
     const pipeline = new VoiceRuntimePipeline({
 
@@ -127,6 +127,10 @@ function createVoiceV3(runtime, openAIClient, triggerMap = {}) {
     assembleVoiceRuntime(
         voiceRuntime
     );
+
+bridge.attachRuntime(
+    voiceRuntime
+);
 
 return voiceRuntime;
 
