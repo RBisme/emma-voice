@@ -83,6 +83,8 @@ this.dispatcher =
 
 async processEvent(event) {
 
+console.log("VOICE RUNTIME processEvent:", event);
+
     return await this.dispatcher.execute(event);
 
 }
