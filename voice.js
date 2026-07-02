@@ -108,7 +108,7 @@ wss.on("connection", (ws, req) => {
   console.log("📞 Call connected");
 
 const createLiveVoiceRuntime =
-  require("C:/TM/emma-deploy/live-voice-runtime");
+  require("./live-voice-runtime");
 
 const runtime = {};
 const voiceRuntime = createLiveVoiceRuntime(runtime);
