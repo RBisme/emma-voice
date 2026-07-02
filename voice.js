@@ -192,7 +192,13 @@ let utteranceTimer = null;
 
     const utteranceToProcess = currentUtterance.trim();
     currentUtterance = "";
-    await getEmmaResponse(utteranceToProcess);
+    await voiceRuntime.processEvent({
+
+    type: "caller.transcript",
+
+    transcript: utteranceToProcess
+
+});
   }, 1500);
 }
       }
@@ -202,7 +208,13 @@ let utteranceTimer = null;
         const utteranceToProcess = currentUtterance.trim();
         currentUtterance = "";
         clearTimeout(utteranceTimer);
-        await getEmmaResponse(utteranceToProcess);
+        await voiceRuntime.processEvent({
+
+    type: "caller.transcript",
+
+    transcript: utteranceToProcess
+
+});
       }
     });
 
