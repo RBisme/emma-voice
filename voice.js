@@ -7,7 +7,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...ar
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
-const IDENTITY = require("C:/TM/core/TM_CORE_IDENTITY_KERNEL");
+const IDENTITY = require("./core/TM_CORE_IDENTITY_KERNEL");
 
 const EMMA_PROMPT = fs.readFileSync(
   path.join(__dirname, "emma_sales_prompt.txt"),
