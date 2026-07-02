@@ -113,11 +113,6 @@ const createLiveVoiceRuntime =
 const runtime = {};
 const voiceRuntime = createLiveVoiceRuntime(runtime);
 
-const createLiveVoiceRuntime =
-  require("C:/TM/emma-deploy/live-voice-runtime");
-
-const runtime = {};
-const voiceRuntime = createLiveVoiceRuntime(runtime);
 
   let streamSid = null;
   let conversationHistory = [];
