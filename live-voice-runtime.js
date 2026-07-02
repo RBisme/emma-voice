@@ -72,6 +72,7 @@ console.log("====================================");
 
         );
 
+voice.start();
 
 return voice;
 
