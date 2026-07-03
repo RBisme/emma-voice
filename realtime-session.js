@@ -103,7 +103,7 @@ class RealtimeSession {
 
     }
 
-    send(message) {
+      send(message) {
 
         if (!this.connected) {
 
@@ -119,19 +119,29 @@ class RealtimeSession {
 
     }
 
+    sendAudio(payload) {
+
+        this.send({
+
+            type: "input_audio_buffer.append",
+
+            audio: payload
+
+        });
+
+    }
+
 }
 
-sendAudio(payload) {
+        this.ws.send(
+            JSON.stringify(message)
+        );
 
-    this.send({
-
-        type: "input_audio_buffer.append",
-
-        audio: payload
-
-    });
+    }
 
 }
+
+
 
 module.exports = {
 
