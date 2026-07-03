@@ -137,7 +137,14 @@ case "connected":
 case "start":
 case "media":
 
-    await runtime.processEvent(data);
+    if (runtime.session) {
+
+        runtime.session.sendAudio(
+            data.media.payload
+        );
+
+    }
+
     break;
 
     case "stop":

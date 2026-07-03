@@ -121,6 +121,18 @@ class RealtimeSession {
 
 }
 
+sendAudio(payload) {
+
+    this.send({
+
+        type: "input_audio_buffer.append",
+
+        audio: payload
+
+    });
+
+}
+
 module.exports = {
 
     RealtimeSession
