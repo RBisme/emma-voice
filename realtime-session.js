@@ -76,6 +76,10 @@ async connect() {
                 "✅ OpenAI Realtime Connected"
             );
 
+console.log(
+    "OpenAI readyState:",
+    this.ws.readyState
+);
 
 configureRealtimeSession(this);
 
@@ -126,6 +130,11 @@ configureRealtimeSession(this);
             );
 
         }
+
+console.log(
+    "send() readyState:",
+    this.ws.readyState
+);
 
         this.ws.send(
             JSON.stringify(message)
