@@ -133,15 +133,6 @@ class RealtimeSession {
 
 }
 
-        this.ws.send(
-            JSON.stringify(message)
-        );
-
-    }
-
-}
-
-
 
 module.exports = {
 
