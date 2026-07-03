@@ -27,6 +27,10 @@
 
 const WebSocket = require("ws");
 
+const {
+    configureRealtimeSession
+} = require("./realtime-session-config");
+
 class RealtimeSession {
 
     constructor({ apiKey, model }) {
@@ -71,6 +75,9 @@ async connect() {
             console.log(
                 "✅ OpenAI Realtime Connected"
             );
+
+
+configureRealtimeSession(this);
 
             resolve();
 
