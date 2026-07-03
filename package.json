@@ -1,9 +1,9 @@
 {
   "name": "emma-voice",
   "version": "1.0.0",
- "main": "voice-v4.js",
+ "main": "voice.js",
 "scripts": {
-  "start": "node voice-v4.js"
+  "start": "node voice.js"
 },
   "dependencies": {
     "express": "^4.18.2",
