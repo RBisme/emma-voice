@@ -28,7 +28,35 @@ const WebSocket = require("ws");
 const createLiveVoiceRuntime =
     require("./live-voice-runtime");
 
-const server = http.createServer();
+const server = http.createServer((req, res) => {
+
+    if (
+        req.method === "POST" &&
+        req.url === "/voice"
+    ) {
+
+        res.writeHead(200, {
+
+            "Content-Type": "text/xml"
+
+        });
+
+        res.end(`<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Connect>
+        <Stream url="wss://${req.headers.host}/voice" />
+    </Connect>
+</Response>`);
+
+        return;
+
+    }
+
+    res.writeHead(200);
+
+    res.end("Voice V4 running");
+
+});
 
 server.on("upgrade", (request, socket, head) => {
 
@@ -76,6 +104,16 @@ const wss = new WebSocket.Server({
 wss.on("connection", async (ws, request) => {
 
     console.log("📞 Call connected");
+
+console.log(
+    "Client:",
+    request.socket.remoteAddress
+);
+
+console.log(
+    "Path:",
+    request.url
+);
 
 ws.on("close", () => {
 
