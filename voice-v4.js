@@ -133,20 +133,12 @@ if (!data.event) {
 
     switch (data.event) {
 
-    case "connected":
+case "connected":
+case "start":
+case "media":
 
-        await runtime.connected(ws);
-        break;
-
-    case "start":
-
-        await runtime.started(data);
-        break;
-
-    case "media":
-
-        await runtime.media(data);
-        break;
+    await runtime.processEvent(data);
+    break;
 
     case "stop":
 

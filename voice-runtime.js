@@ -89,6 +89,42 @@ console.log("VOICE RUNTIME processEvent:", event);
 
 }
 
+async connected(data) {
+
+    return await this.processEvent({
+
+        type: "connected",
+
+        data
+
+    });
+
+}
+
+async started(data) {
+
+    return await this.processEvent({
+
+        type: "start",
+
+        data
+
+    });
+
+}
+
+async media(data) {
+
+    return await this.processEvent({
+
+        type: "media",
+
+        data
+
+    });
+
+}
+
     async start() {
 
         console.log(
