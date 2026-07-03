@@ -7,7 +7,7 @@ const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...ar
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
-const IDENTITY = require("./core/TM_CORE_IDENTITY_KERNEL");
+const IDENTITY = require("C:/TM/core/TM_CORE_IDENTITY_KERNEL");
 
 const EMMA_PROMPT = fs.readFileSync(
   path.join(__dirname, "emma_sales_prompt.txt"),
@@ -107,13 +107,6 @@ wss.on("connection", (ws, req) => {
 
   console.log("📞 Call connected");
 
-const createLiveVoiceRuntime =
-  require("./live-voice-runtime");
-
-const runtime = {};
-const voiceRuntime = createLiveVoiceRuntime(runtime);
-
-
   let streamSid = null;
   let conversationHistory = [];
   let assistantName = "Emma";
@@ -192,13 +185,7 @@ let utteranceTimer = null;
 
     const utteranceToProcess = currentUtterance.trim();
     currentUtterance = "";
-    await voiceRuntime.processEvent({
-
-    type: "caller.transcript",
-
-    transcript: utteranceToProcess
-
-});
+    await getEmmaResponse(utteranceToProcess);
   }, 1500);
 }
       }
@@ -208,13 +195,7 @@ let utteranceTimer = null;
         const utteranceToProcess = currentUtterance.trim();
         currentUtterance = "";
         clearTimeout(utteranceTimer);
-        await voiceRuntime.processEvent({
-
-    type: "caller.transcript",
-
-    transcript: utteranceToProcess
-
-});
+        await getEmmaResponse(utteranceToProcess);
       }
     });
 
