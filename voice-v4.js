@@ -58,41 +58,6 @@ const server = http.createServer((req, res) => {
 
 });
 
-server.on("upgrade", (request, socket, head) => {
-
-    if (request.url !== "/voice") {
-
-        socket.destroy();
-
-        return;
-
-    }
-
-    wss.handleUpgrade(
-
-        request,
-
-        socket,
-
-        head,
-
-        ws => {
-
-            wss.emit(
-
-                "connection",
-
-                ws,
-
-                request
-
-            );
-
-        }
-
-    );
-
-});
 
 const wss = new WebSocket.Server({
 
