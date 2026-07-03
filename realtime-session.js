@@ -43,7 +43,9 @@ class RealtimeSession {
 
     }
 
-    connect() {
+async connect() {
+
+    return await new Promise((resolve, reject) => {
 
         this.ws = new WebSocket(
 
@@ -70,7 +72,11 @@ class RealtimeSession {
                 "✅ OpenAI Realtime Connected"
             );
 
+            resolve();
+
         });
+
+        this.ws.on("error", reject);
 
         this.ws.on("close", () => {
 
@@ -95,8 +101,9 @@ class RealtimeSession {
 
         });
 
-    }
+    });
 
+}
     onEvent(listener) {
 
         this.listeners.push(listener);

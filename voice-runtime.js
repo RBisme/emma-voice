@@ -125,13 +125,13 @@ async media(data) {
 
 }
 
-    async start() {
+     async start() {
 
         console.log(
             "Starting TradesMagic Voice Runtime..."
         );
 
-        this.session.connect();
+        await this.session.connect();
 
     }
 
