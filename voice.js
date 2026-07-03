@@ -7,7 +7,6 @@ const fetch = (...args) => import("node-fetch").then(({ default: f }) => f(...ar
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
-const IDENTITY = require("C:/TM/core/TM_CORE_IDENTITY_KERNEL");
 
 const EMMA_PROMPT = fs.readFileSync(
   path.join(__dirname, "emma_sales_prompt.txt"),
@@ -97,8 +96,6 @@ app.get("/", (req, res) => res.send("Emma voice server running ✅"));
 
 // ---------- Main WebSocket handler ----------
 wss.on("connection", (ws, req) => {
-
-
   // Only handle /stream path
   if (!req.url.includes("/stream")) {
     ws.close();
@@ -115,7 +112,7 @@ let activeVoiceId = EMMA_VOICE_ID;
 let activeGreeting = "Hello, thank you for calling TradesMagic, this is Emma. How can I help you today?";
 if (req.headers.host.includes("855")) {
   assistantName = "Maggie";
-  activePrompt = IDENTITY.CORE_POSITIONING + "\n\n" + MAGGIE_PROMPT;
+  activePrompt = MAGGIE_PROMPT;
   activeVoiceId = MAGGIE_VOICE_ID;
   activeGreeting =
     "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
