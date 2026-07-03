@@ -134,7 +134,15 @@ if (!data.event) {
     switch (data.event) {
 
 case "connected":
+
+    await runtime.connected(data);
+    break;
+
 case "start":
+
+    await runtime.started(data);
+    break;
+
 case "media":
 
     if (runtime.session) {
