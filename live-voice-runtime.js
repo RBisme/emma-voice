@@ -91,7 +91,6 @@ const audioHandler =
 
     });
 
-voice.start();
 
 return voice;
 
