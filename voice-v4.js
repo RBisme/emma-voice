@@ -169,6 +169,10 @@ case "media":
             data.media.payload
         );
 
+runtime.session.commitAudio();
+
+runtime.responseManager.createResponse();
+
     }
 
     break;
