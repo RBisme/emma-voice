@@ -432,7 +432,10 @@ console.log("🆔 Call SID:", callSid);
 
  case "media":
 
-  if (!isSpeaking) {
+  if (
+    !isSpeaking &&
+    realtime.connected
+  ) {
 
     realtime.sendAudio(
       data.media.payload
