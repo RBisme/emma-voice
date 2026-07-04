@@ -8,6 +8,18 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
+const {
+  RealtimeSession
+} = require("./realtime-session");
+
+const realtime = new RealtimeSession({
+
+  apiKey: process.env.OPENAI_API_KEY,
+
+  model: "gpt-realtime"
+
+});
+
 const EMMA_PROMPT = fs.readFileSync(
   path.join(__dirname, "emma_sales_prompt.txt"),
   "utf8"
@@ -118,13 +130,22 @@ if (req.headers.host.includes("855")) {
     "Hello, thank you for calling. This is Maggie, your AI business solutions assistant. How can I help you today?";
 }
   let deepgramWs = null;
+
+
+
   let isSpeaking = false;
 let isProcessing = false;
 let currentUtterance = "";
 let utteranceTimer = null;
 
   // ---------- Connect to Deepgram ----------
-  function connectDeepgram() {
+  async function connectOpenAIRealtime() {
+
+  await realtime.connect();
+
+}
+
+function connectDeepgram() {
     const dgUrl =
       "wss://api.deepgram.com/v1/listen?" +
       "model=nova-2&" +
@@ -374,7 +395,7 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
     switch (data.event) {
       case "connected":
         console.log("✅ Twilio stream connected");
-        connectDeepgram();
+        await connectOpenAIRealtime();
         break;
 
 case "start":
@@ -409,12 +430,16 @@ console.log("🆔 Call SID:", callSid);
   sendGreeting();
   break;
 
-    case "media":
-  // Only forward audio to Deepgram when Emma is NOT speaking
-  if (!isSpeaking && deepgramWs?.readyState === WebSocket.OPEN) {
-    const audioBuffer = Buffer.from(data.media.payload, "base64");
-    deepgramWs.send(audioBuffer);
+ case "media":
+
+  if (!isSpeaking) {
+
+    realtime.sendAudio(
+      data.media.payload
+    );
+
   }
+
   break;
 
       case "stop":
