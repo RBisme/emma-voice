@@ -28,6 +28,10 @@ const WebSocket = require("ws");
 const createLiveVoiceRuntime =
     require("./live-voice-runtime");
 
+const {
+    TwilioMediaStream
+} = require("./twilio-media-stream");
+
 const server = http.createServer((req, res) => {
 
     if (
