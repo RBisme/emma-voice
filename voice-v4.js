@@ -92,10 +92,15 @@ ws.on("error", err => {
 
 });
 
+const twilioStream =
+    new TwilioMediaStream(ws);
+
   const runtime =
     createLiveVoiceRuntime({
 
-        websocket: ws
+        websocket: ws,
+
+        twilioStream
 
     });
 
@@ -141,6 +146,9 @@ case "connected":
 case "start":
 
     await runtime.started(data);
+runtime.twilioStream.setStreamSid(
+    data.start.streamSid
+);
     break;
 
 case "media":
