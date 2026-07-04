@@ -33,11 +33,38 @@ function assembleVoiceRuntime(runtime) {
 
     runtime.eventHandler.register(
 
-        "response.output_audio_transcript.delta",
+    "response.output_audio.delta",
 
-        event => runtime.transcriptHandler.process(event)
+    event => {
 
-    );
+        console.log(
+            "STEP 1 - output_audio.delta"
+        );
+
+        runtime.audioHandler.process(event);
+
+    }
+
+);
+
+runtime.audioHandler.onAudio(
+
+    audio => {
+
+        console.log(
+            "STEP 2 - onAudio",
+            audio.length
+        );
+
+        runtime.twilioStream.sendAudio(audio);
+
+        console.log(
+            "STEP 3 - sendAudio called"
+        );
+
+    }
+
+);
 
     runtime.eventHandler.register(
 
