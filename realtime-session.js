@@ -136,10 +136,10 @@ console.log(
 
         }
 
-console.log(
-    "send() readyState:",
-    this.ws.readyState
-);
+// console.log(
+//     "send() readyState:",
+//     this.ws.readyState
+// );
 
         this.ws.send(
             JSON.stringify(message)
@@ -160,6 +160,8 @@ console.log(
     }
 
 commitAudio() {
+
+console.log("COMMIT AUDIO");
 
     this.send({
 
