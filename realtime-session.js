@@ -106,7 +106,7 @@ configureRealtimeSession(this);
 
 console.log(
     "OPENAI EVENT:",
-    event.type
+    event
 );
 
             this.listeners.forEach(listener => {
