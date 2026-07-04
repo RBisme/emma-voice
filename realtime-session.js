@@ -78,7 +78,9 @@ async connect() {
 
 console.log(
     "OpenAI readyState:",
-    this.ws.readyState
+    this.ws.readyState,
+    "OPEN constant:",
+    WebSocket.OPEN
 );
 
 configureRealtimeSession(this);
