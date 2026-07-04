@@ -154,6 +154,17 @@ console.log(
 
     }
 
+commitAudio() {
+
+    this.send({
+
+        type: "input_audio_buffer.commit"
+
+    });
+
+}
+
+
 }
 
 

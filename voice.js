@@ -430,16 +430,16 @@ console.log("🆔 Call SID:", callSid);
   sendGreeting();
   break;
 
- case "media":
+case "media":
 
-  if (
-    !isSpeaking &&
-    realtime.connected
-  ) {
+  if (!isSpeaking &&
+      realtime.connected) {
 
     realtime.sendAudio(
       data.media.payload
     );
+
+    realtime.commitAudio();
 
   }
 
