@@ -72,7 +72,9 @@ function buildSessionConfig(prompt) {
 
 function configureRealtimeSession(session) {
 
-    const config = buildSessionConfig("");
+    const config = buildSessionConfig(
+    session.prompt || ""
+);
 
     session.send(config);
 
