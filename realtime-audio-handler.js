@@ -41,6 +41,11 @@ class RealtimeAudioHandler {
 
         }
 
+console.log(
+    "AUDIO DELTA:",
+    event.delta.length
+);
+
         this.listeners.forEach(listener => {
 
             listener(event.delta);
