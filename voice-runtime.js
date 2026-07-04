@@ -62,6 +62,11 @@ class VoiceRuntime {
 
         this.twilioStream = twilioStream;
 
+        console.log(
+    "VoiceRuntime twilioStream:",
+    !!this.twilioStream
+);
+
         this.pipeline = pipeline;
 
 this.controlLayer =

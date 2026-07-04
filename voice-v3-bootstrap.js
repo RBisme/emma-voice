@@ -49,7 +49,27 @@ const { assembleVoiceRuntime } =
 require("./voice-runtime-assembler");
 
 
-function createVoiceV3(runtime, openAIClient, triggerMap = {}) {
+function createVoiceV3({
+
+    runtime,
+
+    session,
+
+    eventHandler,
+
+    transcriptHandler,
+
+    audioHandler,
+
+    responseManager,
+
+    twilioStream,
+
+    openAIClient,
+
+    triggerMap = {}
+
+}) {
 
   console.log("====================================");
     console.log("VOICE V3 BOOTSTRAP");
@@ -77,26 +97,7 @@ function createVoiceV3(runtime, openAIClient, triggerMap = {}) {
 
     });
 
-    const session = new RealtimeSession({
-
-        apiKey: process.env.OPENAI_API_KEY,
-
-        model: "gpt-realtime"
-
-    });
-
-    const eventHandler =
-        new RealtimeEventHandler();
-
-    const transcriptHandler =
-        new RealtimeTranscriptHandler();
-
-    const audioHandler =
-        new RealtimeAudioHandler();
-
-    const responseManager =
-        new RealtimeResponseManager(session);
-
+   
    const voiceRuntime =
     new VoiceRuntime({
 
@@ -110,7 +111,7 @@ function createVoiceV3(runtime, openAIClient, triggerMap = {}) {
 
         audioHandler,
 
-        twilioStream: null,
+        twilioStream,
 
         pipeline,
 

@@ -30,6 +30,10 @@ const {
 } = require("./realtime-transcript-handler");
 
 const {
+    RealtimeAudioHandler
+} = require("./realtime-audio-handler");
+
+const {
     RealtimeResponseManager
 } = require("./realtime-response-manager");
 
@@ -61,16 +65,31 @@ console.log("====================================");
     const responseManager =
         new RealtimeResponseManager(session);
 
-    const voice =
-        createVoiceV3(
+const audioHandler =
+    new RealtimeAudioHandler();
 
-            runtime,
+   const voice =
+    createVoiceV3({
 
-            {},
+        runtime,
 
-            {}
+        session,
 
-        );
+        eventHandler,
+
+        transcriptHandler,
+
+        audioHandler,
+
+        responseManager,
+
+        twilioStream: runtime.twilioStream,
+
+        openAIClient: {},
+
+        triggerMap: {}
+
+    });
 
 voice.start();
 
