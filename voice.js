@@ -436,19 +436,9 @@ case "media":
   if (!isSpeaking &&
       realtime.connected) {
 
-  realtime.sendAudio(
+realtime.sendAudio(
   data.media.payload
 );
-
-realtimeFrames++;
-
-if (realtimeFrames >= 5) {
-
-  realtime.commitAudio();
-
-  realtimeFrames = 0;
-
-}
 
   }
 
