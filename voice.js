@@ -137,6 +137,7 @@ if (req.headers.host.includes("855")) {
 let isProcessing = false;
 let currentUtterance = "";
 let utteranceTimer = null;
+let realtimeFrames = 0;
 
   // ---------- Connect to Deepgram ----------
   async function connectOpenAIRealtime() {
@@ -435,11 +436,19 @@ case "media":
   if (!isSpeaking &&
       realtime.connected) {
 
-    realtime.sendAudio(
-      data.media.payload
-    );
+  realtime.sendAudio(
+  data.media.payload
+);
 
-    realtime.commitAudio();
+realtimeFrames++;
+
+if (realtimeFrames >= 5) {
+
+  realtime.commitAudio();
+
+  realtimeFrames = 0;
+
+}
 
   }
 
