@@ -128,6 +128,12 @@ try {
 
     data = JSON.parse(message.toString());
 
+console.log(
+    "TWILIO EVENT:",
+    data.event
+);
+
+
 } catch {
 
     return;
