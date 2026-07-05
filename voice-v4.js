@@ -165,13 +165,9 @@ case "media":
 
     if (runtime.session) {
 
-        runtime.session.sendAudio(
-            data.media.payload
-        );
-
-runtime.session.commitAudio();
-
-runtime.responseManager.createResponse();
+    runtime.session.sendAudio(
+    data.media.payload
+);
 
     }
 
