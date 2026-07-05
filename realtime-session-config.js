@@ -48,11 +48,17 @@ function buildSessionConfig(prompt) {
 
                 },
 
-               output: {
-    format: {
-        type: "audio/pcmu"
-    },
-    voice: "sage"
+                       output: {
+
+                    format: {
+
+                        type: "audio/pcmu"
+
+                    },
+
+                    voice: "sage"
+
+                }
 
             }
 
