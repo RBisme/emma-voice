@@ -48,19 +48,11 @@ function buildSessionConfig(prompt) {
 
                 },
 
-                output: {
-
-                    format: {
-
-                        type: "audio/pcm",
-
-                        rate: 24000
-
-                    },
-
-                    voice: "sage"
-
-                }
+               output: {
+    format: {
+        type: "audio/pcmu"
+    },
+    voice: "sage"
 
             }
 
