@@ -9,6 +9,10 @@ const path = require("path");
 const zlib = require("zlib");
 
 const {
+  TwilioMediaStream
+} = require("./twilio-media-stream");
+
+const {
   RealtimeSession
 } = require("./realtime-session");
 
@@ -131,7 +135,8 @@ if (req.headers.host.includes("855")) {
 }
   let deepgramWs = null;
 
-
+const twilioStream =
+  new TwilioMediaStream(ws);
 
   let isSpeaking = false;
 let isProcessing = false;
@@ -401,6 +406,8 @@ if (buffer.length > 0 && isSpeaking && ws.readyState === WebSocket.OPEN) {
 
 case "start":
   streamSid = data.start?.streamSid || data.streamSid;
+
+twilioStream.setStreamSid(streamSid);
 
   const calledNumber =
     data.start?.customParameters?.to || "";
