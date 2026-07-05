@@ -156,9 +156,23 @@ case "connected":
 case "start":
 
     await runtime.started(data);
-runtime.twilioStream.setStreamSid(
-    data.start.streamSid
-);
+
+    runtime.twilioStream.setStreamSid(
+        data.start.streamSid
+    );
+
+    setTimeout(() => {
+
+        if (!runtime.session) {
+
+            return;
+
+        }
+
+        runtime.responseManager.createResponse();
+
+    }, 500);
+
     break;
 
 case "media":
