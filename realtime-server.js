@@ -159,6 +159,8 @@ if (response.type === "response.done") {
       setTimeout(() => {
         if (!openAiReady || !sessionConfigured) return;
 
+console.log("SENDING RESPONSE.CREATE");
+
         openAiWs.send(JSON.stringify({
           type: "response.create",
           response: {
