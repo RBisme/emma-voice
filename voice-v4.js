@@ -169,7 +169,7 @@ case "media":
     data.media.payload
 );
 
-// runtime.session.commitAudio();
+ runtime.session.commitAudio();
 
     }
 
