@@ -19,6 +19,13 @@
 
 class VoiceBusinessResponseGenerator {
 
+    constructor(deployment) {
+
+        this.deployment =
+            deployment;
+
+    }
+
     async generate(runtimeResult) {
 
         return "Thank you for calling TradesMagic.";

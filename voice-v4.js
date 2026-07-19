@@ -34,6 +34,8 @@ const {
 
 const server = http.createServer((req, res) => {
 
+console.log("HTTP:", req.method, req.url);
+
     if (
         req.method === "POST" &&
         req.url === "/voice"
@@ -72,53 +74,7 @@ const wss = new WebSocket.Server({
 
 wss.on("connection", async (ws, request) => {
 
-    console.log("📞 Call connected");
-
-console.log(
-    "Client:",
-    request.socket.remoteAddress
-);
-
-console.log(
-    "Path:",
-    request.url
-);
-
-ws.on("close", () => {
-
-    console.log("❌ Call ended");
-
-});
-
-ws.on("error", err => {
-
-    console.error(err);
-
-});
-
-const twilioStream =
-    new TwilioMediaStream(ws);
-
-  const runtime =
-    createLiveVoiceRuntime({
-
-        websocket: ws,
-
-        twilioStream
-
-    });
-
-await runtime.connected(ws);
-
-await runtime.start();
-
-console.log(
-    "Voice Runtime Ready"
-);
-
-console.log(
-    "Waiting for Twilio events..."
-);
+console.log("***** V4 HOST ACCEPTED CALL *****");
 
 ws.on("message", async message => {
 
@@ -128,10 +84,21 @@ try {
 
     data = JSON.parse(message.toString());
 
-console.log(
-    "TWILIO EVENT:",
-    data.event
-);
+// console.log(
+//     "RAW TWILIO:",
+//     message.toString()
+// );
+
+if (data.event !== "media") {
+
+/*   
+ console.log(
+        "TWILIO EVENT:",
+        data.event
+    );
+*/
+
+}
 
 
 } catch {
@@ -161,40 +128,120 @@ case "start":
         data.start.streamSid
     );
 
-    setTimeout(() => {
+setTimeout(() => {
 
-        if (!runtime.session) {
+    console.log("TIMEOUT FIRED");
 
-            return;
+    console.log(
+        "CONNECTED:",
+        runtime.session?.connected
+    );
 
-        }
+    if (
+        !runtime.session ||
+        !runtime.session.connected
+    ) {
 
-        runtime.responseManager.createResponse();
+        console.log("RETURNING EARLY");
 
-    }, 500);
+        return;
+
+    }
+
+    console.log("CALLING createResponse");
+
+    runtime.responseManager.createResponse(
+    runtime.session.prompt
+);
+
+}, 500);
 
     break;
 
 case "media":
 
-    if (runtime.session) {
+    if (
+        runtime.session &&
+        runtime.session.connected
+    ) {
 
-    runtime.session.sendAudio(
+      runtime.session.sendAudio(
     data.media.payload
 );
+
+// runtime.session.commitAudio();
 
     }
 
     break;
 
-    case "stop":
+case "stop":
 
-        await runtime.stop();
-        break;
-
+    await runtime.stop();
+    break;
 }
 
 });
+
+
+    console.log("📞 Call connected");
+
+/*
+console.log(
+    "Client:",
+    request.socket.remoteAddress
+);
+
+*/
+
+/*
+console.log(
+    "Path:",
+    request.url
+);
+
+*/
+
+ws.on("close", () => {
+
+    console.log("❌ Call ended");
+
+});
+
+ws.on("error", err => {
+
+    console.error(err);
+
+});
+
+const twilioStream =
+    new TwilioMediaStream(ws);
+
+ const runtime =
+    createLiveVoiceRuntime({
+        websocket: ws,
+        twilioStream
+    });
+
+await runtime.connected(ws);
+
+await runtime.start();
+
+/*
+console.log(
+    "Voice Runtime Ready"
+);
+
+*/
+
+
+/*
+console.log(
+    "Waiting for Twilio events..."
+);
+
+
+*/
 
 });
 

@@ -24,12 +24,12 @@ const {
 
 class VoiceRuntimeDispatcher {
 
-    constructor() {
+constructor() {
 
-        this.responseGenerator =
-            new VoiceBusinessResponseGenerator();
+    this.responseGenerator =
+        new VoiceBusinessResponseGenerator();
 
-    }
+}
 
 async execute(event) {
 
@@ -40,7 +40,9 @@ async execute(event) {
     }
 
     const response =
-        await this.responseGenerator.generate(event);
+        await this.responseGenerator.generate(
+            event
+        );
 
     return {
 
@@ -53,7 +55,6 @@ async execute(event) {
     };
 
 }
-
 }
 
 module.exports = {

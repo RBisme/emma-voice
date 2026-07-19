@@ -27,6 +27,9 @@
 
 const WebSocket = require("ws");
 
+const fs = require("fs");
+const path = require("path");
+
 const {
     configureRealtimeSession
 } = require("./realtime-session-config");
@@ -44,6 +47,16 @@ class RealtimeSession {
         this.connected = false;
 
         this.listeners = [];
+
+        this.prompt = fs.readFileSync(
+
+    path.join(__dirname, "emma_sales_prompt.txt"),
+
+    "utf8"
+
+);
+
+console.log(this.prompt);
 
     }
 
@@ -111,6 +124,15 @@ console.log(
     event
 );
 
+if (event.type === "session.updated") {
+
+    console.log(
+        "SESSION INSTRUCTIONS:",
+        event.session.instructions
+    );
+
+}
+
             this.listeners.forEach(listener => {
 
                 listener(event);
@@ -138,10 +160,10 @@ console.log(
 
         }
 
-console.log(
-    "send() readyState:",
-    this.ws.readyState
-);
+// console.log(
+//     "send() readyState:",
+//     this.ws.readyState
+// );
 
         this.ws.send(
             JSON.stringify(message)
@@ -150,6 +172,11 @@ console.log(
     }
 
     sendAudio(payload) {
+
+console.log(
+    "APPENDING AUDIO:",
+    payload ? payload.length : 0
+);
 
         this.send({
 

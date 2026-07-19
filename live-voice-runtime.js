@@ -38,6 +38,10 @@ const {
 } = require("./realtime-response-manager");
 
 const {
+    ElevenLabsStreamer
+} = require("./elevenlabs-streamer");
+
+const {
     createVoiceV3
 } = require("./voice-v3-bootstrap");
 
@@ -68,6 +72,16 @@ console.log("====================================");
 const audioHandler =
     new RealtimeAudioHandler();
 
+const elevenLabsStreamer =
+    new ElevenLabsStreamer({
+
+        twilioStream: runtime.twilioStream,
+
+        voiceId: process.env.ELEVENLABS_VOICE_ID,
+
+        apiKey: process.env.ELEVENLABS_API_KEY
+
+    });
    const voice =
     createVoiceV3({
 
@@ -80,6 +94,8 @@ const audioHandler =
         transcriptHandler,
 
         audioHandler,
+
+        elevenLabsStreamer,
 
         responseManager,
 

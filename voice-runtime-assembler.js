@@ -31,7 +31,7 @@ function assembleVoiceRuntime(runtime) {
     // Transcript Pipeline
     //
 
-    runtime.eventHandler.register(
+  runtime.eventHandler.register(
 
     "response.output_audio.delta",
 
@@ -79,6 +79,12 @@ runtime.audioHandler.onAudio(
 
                 return;
 
+await runtime.elevenLabsStreamer.speak(
+
+    transcript
+
+);
+
             }
 
             await runtime.pipeline.process({
@@ -91,25 +97,7 @@ runtime.audioHandler.onAudio(
 
     );
 
-    //
-    // Audio
-
-    //
-
-    runtime.eventHandler.register(
-
-        "response.output_audio.delta",
-
-        event => runtime.audioHandler.process(event)
-
-    );
-
-    runtime.audioHandler.onAudio(
-
-        audio => runtime.twilioStream.sendAudio(audio)
-
-    );
-
+   
 }
 
 module.exports = {

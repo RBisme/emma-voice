@@ -30,21 +30,27 @@ class RealtimeResponseManager {
 
     }
 
-    createResponse(instructions) {
+createResponse(instructions) {
 
-        this.session.send({
+    console.log("CREATE RESPONSE CALLED");
 
-            type: "response.create",
+    const response = {};
 
-            response: {
+    if (instructions) {
 
-                instructions
-
-            }
-
-        });
+        response.instructions = instructions;
 
     }
+
+    this.session.send({
+
+        type: "response.create",
+
+        response
+
+    });
+
+}
 
 }
 

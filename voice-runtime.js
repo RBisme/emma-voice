@@ -36,6 +36,8 @@ class VoiceRuntime {
 
     audioHandler,
 
+    elevenLabsStreamer,
+
     twilioStream,
 
     pipeline,
@@ -59,6 +61,8 @@ class VoiceRuntime {
         this.transcriptHandler = transcriptHandler;
 
         this.audioHandler = audioHandler;
+
+        this.elevenLabsStreamer = elevenLabsStreamer;
 
         this.twilioStream = twilioStream;
 

@@ -61,6 +61,8 @@ function createVoiceV3({
 
     audioHandler,
 
+    elevenLabsStreamer,
+
     responseManager,
 
     twilioStream,
@@ -111,6 +113,8 @@ function createVoiceV3({
 
         audioHandler,
 
+        elevenLabsStreamer,
+
         twilioStream,
 
         pipeline,
@@ -121,7 +125,7 @@ function createVoiceV3({
 
         resolver,
 
-        bridge
+        bridge,
 
     });
 

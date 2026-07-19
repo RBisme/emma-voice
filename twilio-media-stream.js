@@ -70,6 +70,8 @@ class TwilioMediaStream {
 
         }
 
+console.log("SENDING TO STREAM:", this.streamSid);
+
         this.ws.send(
 
             JSON.stringify({
