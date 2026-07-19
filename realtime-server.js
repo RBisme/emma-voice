@@ -76,6 +76,7 @@ const voiceRuntime = createLiveVoiceRuntime(runtime);
 
   let streamSid = null;
   let openAiReady = false;
+  let sessionConfigured = false;
   let currentTranscript = "";
 
   const ffmpeg = spawn(ffmpegPath, [
@@ -143,9 +144,10 @@ if (response.type === "response.done") {
 }
 
     
-    if (response.type === "session.updated") {
-      console.log("SESSION OK");
-    }
+   if (response.type === "session.updated") {
+  sessionConfigured = true;
+  console.log("SESSION OK");
+}
   });
 
   ws.on("message", (message) => {
@@ -155,7 +157,7 @@ if (response.type === "response.done") {
       streamSid = data.start.streamSid;
 
       setTimeout(() => {
-        if (!openAiReady) return;
+        if (!openAiReady || !sessionConfigured) return;
 
         openAiWs.send(JSON.stringify({
           type: "response.create",
