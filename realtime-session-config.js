@@ -56,7 +56,7 @@ function buildSessionConfig(prompt) {
 
                     },
 
-                    voice: "emma"
+                    voice: "sage"
 
                 }
 
