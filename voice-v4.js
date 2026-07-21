@@ -165,16 +165,13 @@ case "media":
         runtime.session.connected
     ) {
 
-      runtime.session.sendAudio(
-    data.media.payload
-);
-
- runtime.session.commitAudio();
+        runtime.session.sendAudio(
+            data.media.payload
+        );
 
     }
 
     break;
-
 case "stop":
 
     await runtime.stop();
