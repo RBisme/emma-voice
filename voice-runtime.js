@@ -22,6 +22,11 @@ const {
     VoiceRuntimeDispatcher
 } = require("./voice-runtime-dispatcher");
 
+const {
+    PersonaTransferHandler
+} = require("./persona-transfer-handler");
+
+
 class VoiceRuntime {
 
    constructor({
@@ -37,6 +42,8 @@ class VoiceRuntime {
     audioHandler,
 
     elevenLabsStreamer,
+
+    runtimeAudioPlayer,
 
     twilioStream,
 
@@ -64,6 +71,8 @@ class VoiceRuntime {
 
         this.elevenLabsStreamer = elevenLabsStreamer;
 
+        this.runtimeAudioPlayer = runtimeAudioPlayer;
+    
         this.twilioStream = twilioStream;
 
         console.log(
@@ -86,9 +95,76 @@ this.bridge =
     bridge;
 
 this.dispatcher =
-    new VoiceRuntimeDispatcher();
+    new VoiceRuntimeDispatcher(this);
+
+this.personaTransferHandler =
+    new PersonaTransferHandler(this);
 
     }
+
+async activatePersona(persona) {
+
+console.log("STEP 2 - activatePersona entered");
+
+console.log("PERSONA:", persona);
+console.log("PROMPT FILE:", persona.promptFile);
+console.log("VOICE ID:", persona.elevenLabsVoiceId);
+
+    const fs = require("fs");
+
+    const promptText =
+        fs.readFileSync(
+            persona.promptFile,
+            "utf8"
+        );
+
+    this.elevenLabsStreamer.setVoice(
+        persona.elevenLabsVoiceId
+    );
+
+    const onSessionUpdated = async event => {
+
+        if (
+            event.type !== "session.updated"
+        ) {
+            return;
+        }
+
+        if (
+            event.session.instructions !== promptText
+        ) {
+            return;
+        }
+
+console.log("STEP 4 - playing transfer sequence");
+
+        await this.runtimeAudioPlayer.playTransferSequence();
+
+console.log("STEP 5 - calling createResponse()");
+
+
+        this.responseManager.createResponse(
+            this.session.prompt
+        );
+
+    };
+
+console.log(
+    "REGISTERING session.updated listener for:",
+    persona.promptFile
+);
+
+    this.session.onEvent(
+        onSessionUpdated
+    );
+
+console.log("STEP 3 - calling updateProfile()");
+
+    this.session.updateProfile(
+        promptText
+    );
+
+}
 
 async processEvent(event) {
 
@@ -146,9 +222,9 @@ async media(data) {
 
     stop() {
 
-        console.log(
-            "Stopping TradesMagic Voice Runtime..."
-        );
+//        console.log(
+//            "Stopping TradesMagic Voice Runtime..."
+//        );
 
     }
 

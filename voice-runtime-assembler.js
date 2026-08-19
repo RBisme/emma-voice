@@ -17,91 +17,91 @@
 
 function assembleVoiceRuntime(runtime) {
 
+    console.log(
+        "ASSEMBLER — elevenLabsStreamer present:",
+        !!runtime.elevenLabsStreamer,
+        typeof runtime.elevenLabsStreamer
+    );
+
     //
     // Realtime Session
     //
-
     runtime.session.onEvent(
-
         event => runtime.eventHandler.handle(event)
-
     );
 
     //
-    // Transcript Pipeline
+    // Text Pipeline (Realtime is in text-only mode — no audio events fire)
     //
-
-  runtime.eventHandler.register(
-
-    "response.output_audio.delta",
-
-    event => {
-
-        console.log(
-            "STEP 1 - output_audio.delta"
-        );
-
-        runtime.audioHandler.process(event);
-
-    }
-
-);
-
-runtime.audioHandler.onAudio(
-
-    audio => {
-
-        console.log(
-            "STEP 2 - onAudio",
-            audio.length
-        );
-
-        runtime.twilioStream.sendAudio(audio);
-
-        console.log(
-            "STEP 3 - sendAudio called"
-        );
-
-    }
-
-);
-
     runtime.eventHandler.register(
-
-        "response.output_audio_transcript.done",
-
+        "response.output_text.done",
         async event => {
 
-            const transcript =
-                runtime.transcriptHandler.process(event);
+            console.log(
+                "TEXT HANDLER FIRED — raw event:",
+                JSON.stringify(event)
+            );
 
-            if (!transcript) {
+            const text = event.text || "";
+
+            console.log(
+                "TEXT HANDLER — text value:",
+                JSON.stringify(text)
+            );
+
+            if (!text) {
+
+                console.log(
+                    "TEXT HANDLER — empty, returning early"
+                );
 
                 return;
 
-await runtime.elevenLabsStreamer.speak(
-
-    transcript
-
-);
-
             }
 
+console.log("RAW AI TEXT:", text);
+
+            const transferMatch =
+                text.match(
+                    /TRANSFER_PERSONA:([A-Za-z0-9_]+)/i
+                );
+
+            const spokenText =
+                text.replace(
+                    /TRANSFER_PERSONA:[A-Za-z0-9_]+/gi,
+                    ""
+                ).trim();
+
+            console.log(
+                "TEXT HANDLER — calling speak() now"
+            );
+
+if (spokenText) {
+
+    await runtime.elevenLabsStreamer.speak(
+        spokenText
+    );
+
+}
+
+if (transferMatch) {
+
+    await runtime.personaTransferHandler.transfer(
+        transferMatch[1]
+    );
+
+    return;
+
+}
             await runtime.pipeline.process({
-
-                transcript
-
+                transcript: spokenText
             });
 
         }
-
     );
 
-   
 }
 
 module.exports = {
-
     assembleVoiceRuntime
-
 };

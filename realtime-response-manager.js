@@ -42,6 +42,14 @@ createResponse(instructions) {
 
     }
 
+console.log("STEP 5 - sending response.create");
+
+console.log(
+    "RESPONSE.CREATE INSTRUCTIONS:"
+);
+
+console.log(instructions);
+
     this.session.send({
 
         type: "response.create",

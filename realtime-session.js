@@ -36,11 +36,11 @@ const {
 
 class RealtimeSession {
 
-    constructor({ apiKey, model }) {
+    constructor({ apiKey, model, prompt }) {
 
-        this.apiKey = apiKey;
+    this.apiKey = apiKey;
 
-        this.model = model;
+    this.model = model;
 
         this.ws = null;
 
@@ -48,15 +48,7 @@ class RealtimeSession {
 
         this.listeners = [];
 
-        this.prompt = fs.readFileSync(
-
-    path.join(__dirname, "emma_sales_prompt.txt"),
-
-    "utf8"
-
-);
-
-console.log(this.prompt);
+this.prompt = prompt || "";
 
     }
 
@@ -96,9 +88,23 @@ console.log(
     WebSocket.OPEN
 );
 
-configureRealtimeSession(this);
+console.log("PROMPT BEFORE SESSION.UPDATE:");
+console.log(this.prompt);
 
-            resolve();
+if (this.prompt) {
+
+    configureRealtimeSession(this);
+
+}
+else {
+
+    console.log(
+        "Skipping initial session.update (no prompt yet)."
+    );
+
+}
+
+resolve();
 
         });
 
@@ -119,12 +125,32 @@ configureRealtimeSession(this);
             const event =
                 JSON.parse(data.toString());
 
+fs.appendFileSync(
+
+    path.join(
+        __dirname,
+        "openai-events.log"
+    ),
+
+    JSON.stringify(
+        event,
+        null,
+        2
+    ) + "\r\n====================================\r\n"
+
+);
+
 console.log(
     "OPENAI EVENT:",
     event
 );
 
 if (event.type === "session.updated") {
+
+    console.log(
+        "SESSION UPDATED EVENT:",
+        JSON.stringify(event, null, 2)
+    );
 
     console.log(
         "SESSION INSTRUCTIONS:",
@@ -144,11 +170,31 @@ if (event.type === "session.updated") {
     });
 
 }
-    onEvent(listener) {
+    
+   updateProfile(prompt, voice) {
+
+    this.prompt = prompt;
+
+    this.voice = voice;
+
+    configureRealtimeSession(this);
+
+}
+
+onEvent(listener) {
 
         this.listeners.push(listener);
 
     }
+
+offEvent(listener) {
+
+    this.listeners =
+        this.listeners.filter(
+            item => item !== listener
+        );
+
+}
 
       send(message) {
 
@@ -165,18 +211,28 @@ if (event.type === "session.updated") {
 //     this.ws.readyState
 // );
 
-        this.ws.send(
-            JSON.stringify(message)
-        );
+if (message.type !== "input_audio_buffer.append") {
+
+    console.log(
+        "OUTGOING OPENAI:",
+        JSON.stringify(message, null, 2)
+    );
+
+}
+
+this.ws.send(
+    JSON.stringify(message)
+);
 
     }
 
     sendAudio(payload) {
 
-console.log(
-    "APPENDING AUDIO:",
-    payload ? payload.length : 0
-);
+
+// console.log(
+//    "APPENDING AUDIO:",
+//    payload ? payload.length : 0
+// );
 
         this.send({
 

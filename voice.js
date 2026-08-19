@@ -94,11 +94,13 @@ fetch("http://localhost:3002/track-call", {
 
   const host = req.headers.host;
 
+console.log("Twilio webhook body:", req.body);
+
 const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Connect>
     <Stream url="wss://${host}/stream">
-      <Parameter name="to" value="${req.body.To}" />
+      <Parameter name="calledNumber" value="${req.body.To}" />
     </Stream>
   </Connect>
 </Response>`;

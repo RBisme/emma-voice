@@ -12,66 +12,39 @@
  * ============================================================
  */
 
-function buildSessionConfig(prompt) {
+function buildSessionConfig(prompt, voice) {
 
     return {
 
         type: "session.update",
 
-        session: {
-
+session: {
             type: "realtime",
-
+            output_modalities: ["text"],
             instructions: prompt,
-
             audio: {
-
                 input: {
-
                     format: {
-
                         type: "audio/pcmu"
-
                     },
-
                     turn_detection: {
-
                         type: "server_vad",
-
                         threshold: 0.75,
-
                         prefix_padding_ms: 300,
-
                         silence_duration_ms: 1000
-
                     }
-
-                },
-
-                       output: {
-
-                    format: {
-
-                        type: "audio/pcmu"
-
-                    },
-
-                    voice: "sage"
-
                 }
-
             }
-
         }
-
     };
 
 }
 
 function configureRealtimeSession(session) {
 
-    const config = buildSessionConfig(
-    session.prompt || ""
+const config = buildSessionConfig(
+    session.prompt || "",
+    session.voice
 );
 
     session.send(config);

@@ -63,6 +63,8 @@ function createVoiceV3({
 
     elevenLabsStreamer,
 
+    runtimeAudioPlayer,
+
     responseManager,
 
     twilioStream,
@@ -114,6 +116,8 @@ function createVoiceV3({
         audioHandler,
 
         elevenLabsStreamer,
+
+        runtimeAudioPlayer,
 
         twilioStream,
 

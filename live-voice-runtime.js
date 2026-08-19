@@ -42,6 +42,10 @@ const {
 } = require("./elevenlabs-streamer");
 
 const {
+    RuntimeAudioPlayer
+} = require("./runtime-audio-player");
+
+const {
     createVoiceV3
 } = require("./voice-v3-bootstrap");
 
@@ -51,14 +55,18 @@ console.log("====================================");
 console.log("VOICE V3 BOOTSTRAP");
 console.log("====================================");
 
+
+
     const session =
-        new RealtimeSession({
+    new RealtimeSession({
 
-            apiKey: process.env.OPENAI_API_KEY,
+        apiKey: process.env.OPENAI_API_KEY,
 
-            model: "gpt-realtime"
+        model: "gpt-realtime",
 
-        });
+        prompt: runtime.session?.prompt
+
+    });
 
     const eventHandler =
         new RealtimeEventHandler();
@@ -82,6 +90,10 @@ const elevenLabsStreamer =
         apiKey: process.env.ELEVENLABS_API_KEY
 
     });
+
+const runtimeAudioPlayer =
+    new RuntimeAudioPlayer(runtime);
+
    const voice =
     createVoiceV3({
 
@@ -96,6 +108,8 @@ const elevenLabsStreamer =
         audioHandler,
 
         elevenLabsStreamer,
+
+        runtimeAudioPlayer,
 
         responseManager,
 

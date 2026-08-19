@@ -36,11 +36,8 @@ class RealtimeTranscriptHandler {
 
             case "response.output_audio_transcript.done":
 
-                const completed = this.transcript;
-
-                this.transcript = "";
-
-                return completed;
+               this.transcript = "";
+               return event.transcript || "";
 
             default:
 

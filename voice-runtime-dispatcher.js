@@ -22,9 +22,13 @@ const {
     VoiceBusinessResponseGenerator
 } = require("./voice-business-response-generator");
 
+
+
 class VoiceRuntimeDispatcher {
 
-constructor() {
+constructor(runtime) {
+
+    this.runtime = runtime;
 
     this.responseGenerator =
         new VoiceBusinessResponseGenerator();
@@ -58,6 +62,7 @@ async execute(event) {
 }
 
 module.exports = {
+
 
     VoiceRuntimeDispatcher
 

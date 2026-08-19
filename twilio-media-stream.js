@@ -24,13 +24,15 @@
 
 class TwilioMediaStream {
 
-    constructor(ws) {
+     constructor(ws) {
 
         this.ws = ws;
 
         this.streamSid = null;
 
         this.mediaListeners = [];
+
+        this.pendingMarks = new Map();
 
     }
 
@@ -59,6 +61,37 @@ class TwilioMediaStream {
             });
 
         }
+
+    }
+
+    waitForMark(name) {
+
+        return new Promise(resolve => {
+
+            this.pendingMarks.set(
+                name,
+                resolve
+            );
+
+        });
+
+    }
+
+    receiveMark(name) {
+
+        const resolve =
+
+            this.pendingMarks.get(name);
+
+        if (!resolve) {
+
+            return;
+
+        }
+
+        this.pendingMarks.delete(name);
+
+        resolve();
 
     }
 
@@ -91,6 +124,36 @@ console.log("SENDING TO STREAM:", this.streamSid);
         );
 
     }
+
+sendMark(name) {
+
+    if (!this.streamSid) {
+
+        return;
+
+    }
+
+    console.log("SENDING MARK:", name);
+
+    this.ws.send(
+
+        JSON.stringify({
+
+            event: "mark",
+
+            streamSid: this.streamSid,
+
+            mark: {
+
+                name
+
+            }
+
+        })
+
+    );
+
+}
 
 }
 
