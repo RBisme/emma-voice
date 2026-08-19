@@ -140,10 +140,10 @@ fs.appendFileSync(
 
 );
 
-console.log(
-    "OPENAI EVENT:",
-    event
-);
+// console.log(
+//     "OPENAI EVENT:",
+//     event
+// );
 
 if (event.type === "session.updated") {
 
