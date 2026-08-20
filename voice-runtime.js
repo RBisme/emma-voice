@@ -102,7 +102,10 @@ this.personaTransferHandler =
 
     }
 
-async activatePersona(persona) {
+async activatePersona(
+    persona,
+    playTransferSequence = false
+) {
 
 console.log("STEP 2 - activatePersona entered");
 
@@ -136,9 +139,13 @@ console.log("VOICE ID:", persona.elevenLabsVoiceId);
             return;
         }
 
-console.log("STEP 4 - playing transfer sequence");
+if (playTransferSequence) {
 
-        await this.runtimeAudioPlayer.playTransferSequence();
+    console.log("STEP 4 - playing transfer sequence");
+
+    await this.runtimeAudioPlayer.playTransferSequence();
+
+}
 
 console.log("STEP 5 - calling createResponse()");
 

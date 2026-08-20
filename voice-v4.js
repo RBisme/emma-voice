@@ -221,8 +221,9 @@ case "start":
 
 console.log("STEP 1 - activatePersona()");
 
-   runtime.activatePersona(
-    persona
+runtime.activatePersona(
+    persona,
+    false
 );
 
 

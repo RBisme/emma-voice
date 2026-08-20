@@ -90,8 +90,9 @@ console.log("TRANSFER STEP B");
 console.log("TRANSFER STEP C");
 
 
-       await this.runtime.activatePersona(
-    persona
+await this.runtime.activatePersona(
+    persona,
+    true
 );
 
 console.log("TRANSFER STEP D");
