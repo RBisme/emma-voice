@@ -125,6 +125,11 @@ resolve();
             const event =
                 JSON.parse(data.toString());
 
+console.log(
+    "OPENAI EVENT TYPE:",
+    event.type
+);
+
 fs.appendFileSync(
 
     path.join(
