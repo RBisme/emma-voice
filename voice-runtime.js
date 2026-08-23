@@ -163,9 +163,15 @@ Briefly welcome the caller back.
 
 Acknowledge the transfer naturally.
 
-After your brief greeting, stop speaking and wait for the caller to respond.
+Ask at most one brief follow-up question.
 
-Do not continue the conversation until the caller speaks.`
+After asking that question, stop immediately.
+
+Do not answer your own question.
+
+Do not assume, invent, or simulate anything the caller says.
+
+Wait until the caller actually speaks before continuing.`
 );
 
     };
