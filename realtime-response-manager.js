@@ -30,12 +30,25 @@ class RealtimeResponseManager {
 
     }
 
-createResponse(instructions) {
+createResponse(
+    sessionInstructions,
+    eventInstructions = ""
+) {
 
     console.log("CREATE RESPONSE CALLED");
 
     const response = {};
 
+
+const instructions =
+
+    eventInstructions
+
+        ? sessionInstructions +
+          "\n\n" +
+          eventInstructions
+
+        : sessionInstructions;
     if (instructions) {
 
         response.instructions = instructions;

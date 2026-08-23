@@ -150,9 +150,24 @@ if (playTransferSequence) {
 console.log("STEP 5 - calling createResponse()");
 
 
-        this.responseManager.createResponse(
-            this.session.prompt
-        );
+       this.responseManager.createResponse(
+
+    this.session.prompt,
+
+`Runtime Event: ReturnFromPersona.
+
+Runtime Event: ReturnFromPersona.
+
+You have just resumed the conversation after another Office Intelligence persona completed their task.
+
+Briefly welcome the caller back.
+
+Acknowledge the transfer naturally.
+
+After your brief greeting, stop speaking and wait for the caller to respond.
+
+Do not continue the conversation until the caller speaks.
+);
 
     };
 
