@@ -37,31 +37,13 @@ createResponse(
 
     console.log("CREATE RESPONSE CALLED");
 
-    const response = {};
-
-
-const instructions =
-
-    eventInstructions
-
-        ? sessionInstructions +
-          "\n\n" +
-          eventInstructions
-
-        : sessionInstructions;
-    if (instructions) {
-
-        response.instructions = instructions;
-
-    }
+const response = {};
 
 console.log("STEP 5 - sending response.create");
 
 console.log(
-    "RESPONSE.CREATE INSTRUCTIONS:"
+    "RESPONSE.CREATE (using session instructions)"
 );
-
-console.log(instructions);
 
     this.session.send({
 
