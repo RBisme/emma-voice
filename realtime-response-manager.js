@@ -39,12 +39,6 @@ createResponse(
 
 const response = {};
 
-if (eventInstructions) {
-
-    response.instructions = eventInstructions;
-
-}
-
 console.log("STEP 5 - sending response.create");
 
 console.log(
