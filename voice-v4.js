@@ -37,7 +37,7 @@ const {
 } = require("./twilio-media-stream");
 
 const { startRuntime } =
-    require("C:/TM/OBM/runtime/obm-runtime-engine");
+    require("./OBM/runtime/obm-runtime-engine");
 
 const server = http.createServer((req, res) => {
 
@@ -307,7 +307,7 @@ const twilioStream =
 
 const businessRuntime =
     startRuntime(
-        "C:/TM/OBM/StanleySteemer_Marlborough__BUSINESS_MANIFEST_v1.md"
+        "./OBM/StanleySteemer_Marlborough__BUSINESS_MANIFEST_v1.md"
     );
 
 const runtime =
