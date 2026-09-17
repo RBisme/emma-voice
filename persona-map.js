@@ -1,7 +1,7 @@
 module.exports = {
 
     "+19786935973": {
-        promptFile: "C:\\TM\\brain\\emma_realtime_sales_prompt_v2.txt",
+        promptFile: "./emma_realtime_sales_prompt_v2.txt",
         elevenLabsVoiceId: "l4Coq6695JDX9xtLqXDE"
     },
 
