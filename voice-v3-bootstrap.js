@@ -1,45 +1,152 @@
-[1mdiff --git a/voice-v3-bootstrap.js b/voice-v3-bootstrap.js[m
-[1mindex 88722fb..12b2146 100644[m
-[1m--- a/voice-v3-bootstrap.js[m
-[1m+++ b/voice-v3-bootstrap.js[m
-[36m@@ -138,7 +138,7 @@[m [mfunction createVoiceV3({[m
-     );[m
- [m
- bridge.attachRuntime([m
-[31m-    runtime[m
-[32m+[m[32m    voiceRuntime[m
- );[m
- [m
- return voiceRuntime;[m
-[1mdiff --git a/voice-v4.js b/voice-v4.js[m
-[1mindex cc373ed..8f84724 100644[m
-[1m--- a/voice-v4.js[m
-[1m+++ b/voice-v4.js[m
-[36m@@ -36,9 +36,6 @@[m [mconst {[m
-     TwilioMediaStream[m
- } = require("./twilio-media-stream");[m
- [m
-[31m-const { startRuntime } =[m
-[31m-    require("./OBM/runtime/obm-runtime-engine");[m
-[31m-[m
- const server = http.createServer((req, res) => {[m
- [m
- let body = "";[m
-[36m@@ -305,16 +302,10 @@[m [mws.on("error", err => {[m
- const twilioStream =[m
-     new TwilioMediaStream(ws);[m
- [m
-[31m-const businessRuntime =[m
-[31m-    startRuntime([m
-[31m-        "./OBM/StanleySteemer_Marlborough__BUSINESS_MANIFEST_v1.md"[m
-[31m-    );[m
-[31m-[m
- const runtime =[m
-     createLiveVoiceRuntime({[m
-         websocket: ws,[m
-[31m-        twilioStream,[m
-[31m-        businessRuntime[m
-[32m+[m[32m        twilioStream[m
-     });[m
- [m
- await runtime.connected(ws);[m
+/**
+ * ============================================================
+ * TradesMagic
+ * Voice V3 Bootstrap
+ * ============================================================
+ *
+ * Creates and wires together the Voice V3 runtime.
+ *
+ * Responsibilities:
+ *   - Create Voice Control Layer
+ *   - Create Intent Provider
+ *   - Create Intent Extractor
+ *   - Create Trigger Resolver
+ *   - Create Runtime Bridge
+ *   - Create Runtime Pipeline
+ *
+ * No Twilio.
+ * No OpenAI session.
+ * No business logic.
+ * ============================================================
+ */
+
+const { VoiceControlLayer } = require("./voice-control-layer");
+const { VoiceIntentExtractor } = require("./voice-intent-extractor");
+const { VoiceTriggerResolver } = require("./voice-trigger-resolver");
+const { VoiceRuntimeBridge } = require("./voice-runtime-bridge");
+const { VoiceRuntimePipeline } = require("./voice-runtime-pipeline");
+const { OpenAIIntentProvider } = require("./openai-intent-provider");
+
+const { RealtimeSession } =
+require("./realtime-session");
+
+const { RealtimeEventHandler } =
+require("./realtime-event-handler");
+
+const { RealtimeTranscriptHandler } =
+require("./realtime-transcript-handler");
+
+const { RealtimeAudioHandler } =
+require("./realtime-audio-handler");
+
+const { RealtimeResponseManager } =
+require("./realtime-response-manager");
+
+const { VoiceRuntime } =
+require("./voice-runtime");
+
+const { assembleVoiceRuntime } =
+require("./voice-runtime-assembler");
+
+
+function createVoiceV3({
+
+    runtime,
+
+    session,
+
+    eventHandler,
+
+    transcriptHandler,
+
+    audioHandler,
+
+    elevenLabsStreamer,
+
+    runtimeAudioPlayer,
+
+    responseManager,
+
+    twilioStream,
+
+    openAIClient,
+
+    triggerMap = {}
+
+}) {
+
+  console.log("====================================");
+    console.log("VOICE V3 BOOTSTRAP");
+    console.log("====================================");
+
+    const controlLayer = new VoiceControlLayer();
+
+    const provider = new OpenAIIntentProvider(openAIClient);
+
+    const extractor = new VoiceIntentExtractor(provider);
+
+    const resolver = new VoiceTriggerResolver(triggerMap);
+
+    const bridge = new VoiceRuntimeBridge();
+
+    const pipeline = new VoiceRuntimePipeline({
+
+        qualifier: controlLayer.qualifier,
+
+        intentExtractor: extractor,
+
+        triggerResolver: resolver,
+
+        runtimeBridge: bridge
+
+    });
+
+   
+   const voiceRuntime =
+    new VoiceRuntime({
+
+        session,
+
+        responseManager,
+
+        eventHandler,
+
+        transcriptHandler,
+
+        audioHandler,
+
+        elevenLabsStreamer,
+
+        runtimeAudioPlayer,
+
+        twilioStream,
+
+        pipeline,
+
+        controlLayer,
+
+        extractor,
+
+        resolver,
+
+        bridge,
+
+    });
+
+    assembleVoiceRuntime(
+        voiceRuntime
+    );
+
+bridge.attachRuntime(
+    voiceRuntime
+);
+
+return voiceRuntime;
+
+}
+
+module.exports = {
+
+    createVoiceV3
+
+};
