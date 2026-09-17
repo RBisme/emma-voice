@@ -36,6 +36,9 @@ const {
     TwilioMediaStream
 } = require("./twilio-media-stream");
 
+const { startRuntime } =
+    require("C:/TM/OBM/runtime/obm-runtime-engine");
+
 const server = http.createServer((req, res) => {
 
 let body = "";
@@ -302,10 +305,16 @@ ws.on("error", err => {
 const twilioStream =
     new TwilioMediaStream(ws);
 
+const businessRuntime =
+    startRuntime(
+        "C:/TM/OBM/StanleySteemer_Marlborough__BUSINESS_MANIFEST_v1.md"
+    );
+
 const runtime =
     createLiveVoiceRuntime({
         websocket: ws,
-        twilioStream
+        twilioStream,
+        businessRuntime
     });
 
 await runtime.connected(ws);
