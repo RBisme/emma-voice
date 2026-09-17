@@ -71,8 +71,15 @@ app.post("/voice", (req, res) => {
 wss.on("connection", (ws) => {
   console.log("🔌 Twilio connected");
 
-const runtime = {};
-const voiceRuntime = createLiveVoiceRuntime(runtime);
+const businessRuntime =
+    startRuntime(
+        "C:/TM/OBM/StanleySteemer_Marlborough__BUSINESS_MANIFEST_v1.md"
+    );
+
+const voiceRuntime =
+    createLiveVoiceRuntime(
+        businessRuntime
+    );
 
   let streamSid = null;
   let openAiReady = false;
