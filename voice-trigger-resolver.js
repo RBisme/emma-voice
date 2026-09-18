@@ -37,7 +37,7 @@ class VoiceTriggerResolver {
 
         }
 
-        const trigger = this.triggerMap[intent.name];
+        const trigger = this.triggerMap[intent.name] || intent.name;
 
         if (!trigger) {
 
