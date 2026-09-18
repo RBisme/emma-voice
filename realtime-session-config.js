@@ -27,6 +27,10 @@ session: {
                     format: {
                         type: "audio/pcmu"
                     },
+
+transcription: {
+    model: "gpt-4o-mini-transcribe"
+},
                     turn_detection: {
                         type: "server_vad",
                         threshold: 0.75,

@@ -33,6 +33,26 @@ function assembleVoiceRuntime(runtime) {
     //
     // Text Pipeline (Realtime is in text-only mode — no audio events fire)
     //
+
+runtime.eventHandler.register(
+    "conversation.item.input_audio_transcription.completed",
+    async event => {
+
+        const transcript = (event.transcript || "").trim();
+
+        if (!transcript) {
+            return;
+        }
+
+        console.log("CALLER TRANSCRIPT:", transcript);
+
+        await runtime.pipeline.process({
+            transcript
+        });
+
+    }
+);
+
     runtime.eventHandler.register(
         "response.output_text.done",
         async event => {
@@ -93,9 +113,7 @@ if (transferMatch) {
     return;
 
 }
-            await runtime.pipeline.process({
-                transcript: spokenText
-            });
+          
 
         }
     );
