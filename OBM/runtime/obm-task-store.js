@@ -1,7 +1,9 @@
 const fs = require("fs");
 
+const path = require("path");
+
 const TASK_FILE =
-  "C:/TM/OBM/runtime/tasks.json";
+  path.join(__dirname, "tasks.json");
 
 function saveTasks(
   tasks
