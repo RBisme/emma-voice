@@ -81,7 +81,7 @@ function createVoiceV3({
 
     const controlLayer = new VoiceControlLayer();
 
-    const provider = new OpenAIIntentProvider(openAIClient);
+    const provider = new OpenAIIntentProvider(openAIClient, runtime);
 
     const extractor = new VoiceIntentExtractor(provider);
 

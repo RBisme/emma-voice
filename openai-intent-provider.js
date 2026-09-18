@@ -1,33 +1,21 @@
-/**
- * ============================================================
- * TM Voice V3
- * OpenAI Intent Provider
- * ------------------------------------------------------------
- * OpenAI implementation of the VoiceIntentProvider interface.
- *
- * Responsibilities:
- *   - Submit qualified transcript
- *   - Receive normalized operational intent
- *   - Validate provider response
- *
- * This is the ONLY Voice V3 component that knows about OpenAI.
- * ============================================================
- */
-
 const { VoiceIntentProvider } = require("./voice-intent-provider");
+const { resolveTrigger } = require("./OBM/runtime/voice-trigger-resolver");
 
 class OpenAIIntentProvider extends VoiceIntentProvider {
 
-    constructor(client) {
-
+    constructor(client, deployment) {
         super();
 
         if (!client) {
             throw new Error("OpenAI client is required.");
         }
 
-        this.client = client;
+        if (!deployment) {
+            throw new Error("Deployment is required.");
+        }
 
+        this.client = client;
+        this.deployment = deployment;
     }
 
     async extractIntent(transcript) {
@@ -36,29 +24,19 @@ class OpenAIIntentProvider extends VoiceIntentProvider {
             throw new Error("Transcript is required.");
         }
 
-        //
-        // Placeholder.
-        //
-        // The actual OpenAI Realtime implementation will
-        // replace this section during provider integration.
-        //
+        const result = resolveTrigger(
+            transcript,
+            this.deployment
+        );
 
         return {
-
-            name: "UNKNOWN",
-
-            confidence: 0.0,
-
+            name: result.trigger,
+            confidence: result.confidence,
             transcript
-
         };
-
     }
-
 }
 
 module.exports = {
-
     OpenAIIntentProvider
-
 };
