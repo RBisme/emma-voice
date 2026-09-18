@@ -138,7 +138,7 @@ function createVoiceV3({
     );
 
 bridge.attachRuntime(
-    voiceRuntime
+    runtime
 );
 
 return voiceRuntime;
