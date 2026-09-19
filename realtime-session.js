@@ -45,6 +45,7 @@ class RealtimeSession {
         this.ws = null;
 
         this.connected = false;
+        this.configured = false;
 
         this.listeners = [];
 
@@ -151,6 +152,9 @@ fs.appendFileSync(
 // );
 
 if (event.type === "session.updated") {
+
+this.configured = true;
+console.log("OPENAI SESSION CONFIGURED");
 
     console.log(
         "SESSION UPDATED EVENT:",

@@ -237,10 +237,11 @@ runtime.activatePersona(
 
 case "media":
 
-    if (
-        runtime.session &&
-        runtime.session.connected
-    ) {
+   if (
+    runtime.session &&
+    runtime.session.connected &&
+    runtime.session.configured
+) {
 
         runtime.session.sendAudio(
             data.media.payload
