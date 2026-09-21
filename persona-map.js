@@ -5,6 +5,11 @@ module.exports = {
         elevenLabsVoiceId: "l4Coq6695JDX9xtLqXDE"
     },
 
+    "+16173974300": {
+        promptFile: "julie_office_manager_prompt_v1.txt",
+        elevenLabsVoiceId: "yj30vwTGJxSHezdAGsv9"
+    },
+
     "+18557486538": {
         promptFile: "maggie_prompt.txt",
         elevenLabsVoiceId: "DXFkLCBUTmvXpp2QwZjA"
