@@ -22,6 +22,17 @@ session: {
             type: "realtime",
             output_modalities: ["text"],
             instructions: prompt,
+            tools: [{
+                type: "function",
+                name: "review_open_tasks",
+                description: "Retrieve existing open work, jobs, or tasks. Call this before answering requests to inspect open work, including open water damage or flood jobs. This is read-only and does not create tasks. Answer conversationally using only returned data; do not invent missing details. An empty successful result means no open tasks. If retrieval fails, explain that open work could not be retrieved, not that there are no tasks.",
+                parameters: {
+                    type: "object",
+                    properties: {},
+                    required: [],
+                    additionalProperties: false
+                }
+            }],
             audio: {
                 input: {
                     format: {

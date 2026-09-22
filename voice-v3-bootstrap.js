@@ -141,6 +141,52 @@ bridge.attachRuntime(
     runtime
 );
 
+    const completedReviewCalls = new Set();
+
+    eventHandler.register("response.done", async event => {
+        if (event.response?.status !== "completed") {
+            return;
+        }
+
+        let reviewReturned = false;
+        for (const item of event.response.output || []) {
+            if (item.type !== "function_call" ||
+                item.name !== "review_open_tasks" ||
+                !item.call_id || completedReviewCalls.has(item.call_id)) {
+                continue;
+            }
+
+            completedReviewCalls.add(item.call_id);
+            let output;
+            try {
+                const tasks = await runtime.reviewOpenTasks();
+                if (!Array.isArray(tasks)) {
+                    throw new Error("Invalid open work result");
+                }
+                output = JSON.stringify({ success: true, tasks });
+            } catch (error) {
+                output = JSON.stringify({
+                    success: false,
+                    error: "Open work could not be retrieved."
+                });
+            }
+
+            session.send({
+                type: "conversation.item.create",
+                item: {
+                    type: "function_call_output",
+                    call_id: item.call_id,
+                    output
+                }
+            });
+            reviewReturned = true;
+        }
+
+        if (reviewReturned) {
+            responseManager.createResponse();
+        }
+    });
+
 return voiceRuntime;
 
 }

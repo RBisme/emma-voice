@@ -46,6 +46,12 @@ runtime.eventHandler.register(
 
         console.log("CALLER TRANSCRIPT:", transcript);
 
+        // Explicit existing-work reviews must not enter task creation.
+        const reviewRequest = /^(?:julie[\s,!:.-]+)?(?:please\s+)?(?:what\s+(?:(?:existing|current)\s+)?open\s+(?:[a-z-]+\s+){0,4}(?:work|jobs|tasks)\b|do\s+we\s+have\s+(?:any\s+)?(?:(?:existing|current)\s+)?open\s+(?:[a-z-]+\s+){0,4}(?:work|jobs|tasks)\b|(?:show|list|review|check|tell\s+me\s+about)\s+(?:me\s+)?(?:(?:the|our|any)\s+)?(?:(?:existing|current)\s+)?open\s+(?:[a-z-]+\s+){0,4}(?:work|jobs|tasks)\b)/i;
+        if (reviewRequest.test(transcript)) {
+            return;
+        }
+
         await runtime.pipeline.process({
             transcript
         });

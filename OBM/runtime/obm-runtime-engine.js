@@ -55,7 +55,8 @@ const {
 } = require("./obm-task-engine");
 
 const {
-  registerTask
+  registerTask,
+  reviewOpenTasks
 } = require("./obm-task-registry");
 
 function startRuntime(manifestPath) {
@@ -223,6 +224,8 @@ deployment.processEvent = function(event) {
   };
 
 };
+
+deployment.reviewOpenTasks = reviewOpenTasks;
 
   return deployment;
 }
